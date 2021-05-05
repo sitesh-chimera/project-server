@@ -20,4 +20,10 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.delete("/:deviceId", async (req, res) => {
+  const response = await DeviceDAO.deleteDevice(req.params.deviceId);
+  if (response.deletedCount) return res.status(200).send(response);
+  return res.status(404).send("device with the given ID in not found");
+});
+
 module.exports = router;

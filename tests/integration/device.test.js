@@ -36,4 +36,21 @@ describe("Testing Device", () => {
       expect(response.body).toMatchObject({ device: "Sam" });
     });
   });
+
+  describe("Delete / ", () => {
+    it("should delete the device", async () => {
+      const payload = {
+        device: "Motorola",
+        os: "motorola plaza",
+        manufacturer: "Motorola",
+      };
+      const res = await request(server).post("/api/devices").send(payload);
+      expect(res.status).toBe(201);
+      expect(res.body).toMatchObject({ device: "Motorola" });
+      const result = await request(server)
+        .delete("/api/devices/" + res.body._id)
+        .send(payload);
+      expect(result.status).toBe(200);
+    });
+  });
 });

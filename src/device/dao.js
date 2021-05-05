@@ -29,6 +29,9 @@ class DeviceDAO {
       return err;
     }
   }
+  static async deleteDevice(deviceId) {
+    return await DeviceModel.deleteOne({ _id: deviceId });
+  }
 }
 
 module.exports = DeviceDAO;
