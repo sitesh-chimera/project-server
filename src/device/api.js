@@ -26,4 +26,13 @@ router.delete("/:deviceId", async (req, res) => {
   return res.status(404).send("device with the given ID in not found");
 });
 
+router.put("/:deviceId", async (req, res) => {
+  const response = await DeviceDAO.checkOutDevice(
+    req.params.deviceId,
+    req.body.lastCheckOutBy
+  );
+  if (response) return res.status(200).send(response);
+  return res.status(404).send("device with the given ID in not found");
+});
+
 module.exports = router;

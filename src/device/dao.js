@@ -32,6 +32,18 @@ class DeviceDAO {
   static async deleteDevice(deviceId) {
     return await DeviceModel.deleteOne({ _id: deviceId });
   }
+
+  static async checkOutDevice(deviceId, checkOutBy) {
+    const data = {
+      lastCheckedOutDate: Date.now(),
+      lastCheckedOutBy: checkOutBy,
+      isCheckedOut: true,
+    };
+    const result = DeviceModel.findByIdAndUpdate(deviceId, data, {
+      new: true,
+    });
+    return result;
+  }
 }
 
 module.exports = DeviceDAO;
