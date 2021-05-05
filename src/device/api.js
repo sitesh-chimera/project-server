@@ -32,7 +32,7 @@ router.put("/:deviceId", async (req, res) => {
     req.body.lastCheckOutBy
   );
   if (response) return res.status(200).send(response);
-  return res.status(404).send("device with the given ID in not found");
+  return res.status(404).send("something went wring please try again.");
 });
 
 module.exports = router;
