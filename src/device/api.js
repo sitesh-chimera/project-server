@@ -9,8 +9,13 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const devices = await DeviceDAO.createDevice();
-  if (devices) return res.status(201).send(devices);
+  try {
+    const devices = await DeviceDAO.createDevice(req);
+    if (devices) return res.status(201).send(devices);
+  } catch (err) {
+    console.log(err);
+  }
+
   return res.status(404).send("something went wrong please try again", devices);
 });
 

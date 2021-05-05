@@ -13,15 +13,14 @@ class DeviceDAO {
    * Saving the device data to the DB
    */
 
-  static async createDevice() {
-    console.log("test");
-    const device = new DeviceModel({
-      device: "Moto",
-      os: "Android",
-      manufacturer: "India",
+  static async createDevice(req) {
+    const deviceDetails = new DeviceModel({
+      device: req.body.device,
+      os: req.body.os,
+      manufacturer: req.body.manufacturer,
     });
     try {
-      return await device.save();
+      return await deviceDetails.save();
     } catch (err) {
       return err;
     }

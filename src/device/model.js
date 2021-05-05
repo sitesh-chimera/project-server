@@ -10,5 +10,5 @@ const deviceSchema = new Schema({
   isCheckedOut: { type: Boolean, default: false },
 });
 
-const DeviceModel = mongoose.model("device", deviceSchema);
+const DeviceModel = mongoose.model("Device", deviceSchema);
 module.exports = DeviceModel;
