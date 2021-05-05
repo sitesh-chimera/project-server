@@ -5,13 +5,27 @@ describe("Testing Device", () => {
   beforeEach(async () => {
     server = require("../../index");
     await DeviceModel.remove({}).exec(); // removing all from Database
+    await DeviceModel.insertMany({
+      // insert test data
+      device: "Apple",
+      os: "IOS",
+      manufacturer: "India",
+    });
   });
   afterEach(() => {
     server.close();
   });
 
-  describe("POST / ", () => {
-    it("create device", async () => {
+  describe("fetch", () => {
+    it("should fetch devices from collection", async () => {
+      const results = await request(server).get("/api/devices");
+      expect(results.status).toBe(200);
+      expect(results.body.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe("insert / ", () => {
+    it("should insert a device into collection", async () => {
       const payload = {
         device: "Sam",
         os: "Android",

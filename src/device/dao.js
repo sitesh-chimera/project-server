@@ -6,7 +6,7 @@ class DeviceDAO {
    */
 
   static async getAllDevices() {
-    await DeviceModel.find();
+    return await DeviceModel.find();
   }
 
   /**
