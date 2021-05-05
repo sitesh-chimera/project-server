@@ -1,8 +1,12 @@
 const express = require("express");
+const app = express();
 const morgan = require("morgan");
 const deviceAPI = require("./src/device/api");
+const cors = require("cors");
+app.use(cors());
+
 require("./src/config/db")();
-const app = express();
+
 app.use(express.json());
 app.use(morgan("combined"));
 
