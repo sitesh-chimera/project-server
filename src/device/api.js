@@ -12,11 +12,12 @@ router.post("/", async (req, res) => {
   try {
     const devices = await DeviceDAO.createDevice(req);
     if (devices) return res.status(201).send(devices);
+    return res
+      .status(404)
+      .send("something went wrong please try again", devices);
   } catch (err) {
     console.log(err);
   }
-
-  return res.status(404).send("something went wrong please try again", devices);
 });
 
 module.exports = router;
