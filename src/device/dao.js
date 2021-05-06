@@ -34,15 +34,22 @@ class DeviceDAO {
   }
 
   static async checkOutDevice(deviceId, checkOutBy) {
-    const data = {
-      lastCheckedOutDate: Date.now(),
-      lastCheckedOutBy: checkOutBy,
-      isCheckedOut: true,
-    };
-    const result = DeviceModel.findByIdAndUpdate(deviceId, data, {
-      new: true,
+    const response = await DeviceModel.find({
+      lastCheckedOutBy: new RegExp("^" + checkOutBy + "$", "i"),
     });
-    return result;
+    if (response.length > 0) {
+      return false;
+    } else {
+      const data = {
+        lastCheckedOutDate: Date.now(),
+        lastCheckedOutBy: checkOutBy,
+        isCheckedOut: true,
+      };
+      const result = await DeviceModel.findByIdAndUpdate(deviceId, data, {
+        new: true,
+      });
+      return result;
+    }
   }
 }
 
