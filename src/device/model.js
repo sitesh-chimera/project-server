@@ -8,6 +8,7 @@ const deviceSchema = new Schema({
   lastCheckedOutDate: { type: Date, default: null },
   lastCheckedOutBy: { type: String, default: null },
   isCheckedOut: { type: Boolean, default: false },
+  feedBack: { type: String, default: null },
 });
 
 const DeviceModel = mongoose.model("Device", deviceSchema);
