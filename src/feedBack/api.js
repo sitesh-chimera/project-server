@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const FeedBackDAO = require("./dao");
+const FeedbackDAO = require("./dao");
 
 router.put("/:deviceId", async (req, res) => {
   try {
-    const feedback = await FeedBackDAO.createFeedBack(
+    const feedback = await FeedbackDAO.createFeedback(
       req.params.deviceId,
-      req.body.feedBack
+      req.body.feedback
     );
     if (feedback) return res.status(201).send(feedback);
     return res

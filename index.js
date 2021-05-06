@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const deviceAPI = require("./src/device/api");
-const feedBackAPI = require("./src/feedBack/api");
+const feedbackAPI = require("./src/feedback/api");
 const cors = require("cors");
 app.use(cors());
 
@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(morgan("combined"));
 
 app.use("/api/devices", deviceAPI);
-app.use("/api/feed_back", feedBackAPI);
+app.use("/api/feedback", feedbackAPI);
 
 const port = 5000;
 

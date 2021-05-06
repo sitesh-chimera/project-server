@@ -65,12 +65,12 @@ describe("Testing Device", () => {
       expect(response.status).toBe(201);
       expect(response.body).toMatchObject({ device: "Sam2" });
 
-      const feedBack = {
-        feedBack: "feedback 1",
+      const feedback = {
+        feedback: "feedback 1",
       };
       const feedbackResponse = await request(server)
-        .put(`/api/feed_back/${response.body._id}`)
-        .send(feedBack);
+        .put(`/api/feedback/${response.body._id}`)
+        .send(feedback);
       expect(feedbackResponse.status).toBe(201);
     });
   });

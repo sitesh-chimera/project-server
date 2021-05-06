@@ -5,9 +5,9 @@ class FeedBackDAO {
    * Saving the device data to the DB
    */
 
-  static async createFeedBack(deviceId, feedBack) {
+  static async createFeedback(deviceId, feedback) {
     const data = {
-      feedBack: feedBack,
+      feedback: feedback,
     };
     const result = await DeviceModel.findByIdAndUpdate(deviceId, data, {
       new: true,
