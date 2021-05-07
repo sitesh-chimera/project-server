@@ -33,23 +33,27 @@ class DeviceDAO {
     return await DeviceModel.deleteOne({ _id: deviceId });
   }
 
-  static async checkOutDevice(deviceId, checkOutBy) {
+  static async existingCheckOutUser(checkOutBy) {
     const response = await DeviceModel.find({
       lastCheckedOutBy: new RegExp("^" + checkOutBy + "$", "i"),
     });
     if (response.length > 0) {
-      return false;
+      return true;
     } else {
-      const data = {
-        lastCheckedOutDate: Date.now(),
-        lastCheckedOutBy: checkOutBy,
-        isCheckedOut: true,
-      };
-      const result = await DeviceModel.findByIdAndUpdate(deviceId, data, {
-        new: true,
-      });
-      return result;
+      return false;
     }
+  }
+
+  static async checkOutDevice(deviceId, checkOutBy) {
+    const data = {
+      lastCheckedOutDate: Date.now(),
+      lastCheckedOutBy: checkOutBy,
+      isCheckedOut: true,
+    };
+    const result = await DeviceModel.findByIdAndUpdate(deviceId, data, {
+      new: true,
+    });
+    return result;
   }
 }
 

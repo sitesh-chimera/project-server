@@ -27,12 +27,21 @@ router.delete("/:deviceId", async (req, res) => {
 });
 
 router.put("/:deviceId", async (req, res) => {
-  const response = await DeviceDAO.checkOutDevice(
-    req.params.deviceId,
-    req.body.lastCheckOutBy
-  );
-  if (response) return res.status(200).send(response);
-  return res.status(404).send("name already exist.");
+  try {
+    const isExist = await DeviceDAO.existingCheckOutUser(
+      req.body.lastCheckOutBy
+    );
+    if (isExist)
+      return res.status(404).send("device already checkout by this user.");
+
+    const response = await DeviceDAO.checkOutDevice(
+      req.params.deviceId,
+      req.body.lastCheckOutBy
+    );
+    if (response) return res.status(200).send(response);
+  } catch (err) {
+    throw new Error(" something went wrong");
+  }
 });
 
 module.exports = router;

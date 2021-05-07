@@ -74,4 +74,24 @@ describe("Testing Device", () => {
       expect(feedbackResponse.status).toBe(201);
     });
   });
+
+  describe("checkout device  / ", () => {
+    it("should checkout device", async () => {
+      const payload = {
+        device: "Apple",
+        os: "Catalina",
+        manufacturer: "India",
+      };
+      const response = await request(server).post("/api/devices").send(payload);
+      expect(response.status).toBe(201);
+      expect(response.body).toMatchObject({ device: "Apple" });
+      const checkOut = {
+        lastCheckOutBy: "sam@123",
+      };
+      const checkOutResponse = await request(server)
+        .put(`/api/devices/${response.body._id}`)
+        .send(checkOut);
+      expect(checkOutResponse.status).toBe(200);
+    });
+  });
 });
