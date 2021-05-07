@@ -3,10 +3,13 @@ const router = express.Router();
 const DeviceDAO = require("../device/dao");
 const moment = require("moment");
 
-const format = "hh:mm:ss";
-const time = moment(moment(), format),
-  checkOutstartTime = moment("09:00:00", format),
-  checkOutEndTime = moment("17:00:00", format);
+function validateTime(startTime, endTime) {
+  const format = "hh:mm:ss";
+  const time = moment(moment(), format),
+    checkOutstartTime = moment(startTime, format),
+    checkOutEndTime = moment(endTime, format);
+  if (!time.isBetween(checkOutstartTime, checkOutEndTime)) return true;
+}
 
 router.get("/", async (req, res) => {
   const devices = await DeviceDAO.getAllDevices();
@@ -56,10 +59,13 @@ router.put("/:deviceId", async (req, res) => {
     if (isExist)
       return res.status(404).send("device already checkout by this user.");
 
-    if (!time.isBetween(checkOutstartTime, checkOutEndTime))
+    const startTime = req.body.startTime ? req.body.startTime : "09:00:00";
+    const endTime = req.body.endTime ? req.body.endTime : "17:00:00";
+
+    if (validateTime(startTime, endTime))
       return res
         .status(404)
-        .send("check out can performed between 9:00 AM to 17:00 AM.");
+        .send("check out can performed between 9:00 AM to 17:00 AM");
 
     const response = await DeviceDAO.checkOutDevice(
       req.params.deviceId,

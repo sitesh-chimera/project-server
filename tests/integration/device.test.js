@@ -85,13 +85,36 @@ describe("Testing Device", () => {
       const response = await request(server).post("/api/devices").send(payload);
       expect(response.status).toBe(201);
       expect(response.body).toMatchObject({ device: "Apple" });
-      const checkOut = {
+
+      const checkOutData = {
         lastCheckOutBy: "sam@123",
+        startTime: "09:00:00",
+        endTime: "17:00:00",
       };
       const checkOutResponse = await request(server)
         .put(`/api/devices/${response.body._id}`)
-        .send(checkOut);
+        .send(checkOutData);
       expect(checkOutResponse.status).toBe(200);
+
+      const checkOutDataWithSameName = {
+        lastCheckOutBy: "sam@123",
+        startTime: "09:00:00",
+        endTime: "17:00:00",
+      };
+      const checkOutUser = await request(server)
+        .put(`/api/devices/${response.body._id}`)
+        .send(checkOutDataWithSameName);
+      expect(checkOutUser.status).toBe(404);
+
+      const checkOutDataValidationData = {
+        lastCheckOutBy: "sam@123",
+        startTime: "18:00:00",
+        endTime: "19:00:00",
+      };
+      const checkOutTime = await request(server)
+        .put(`/api/devices/${response.body._id}`)
+        .send(checkOutDataValidationData);
+      expect(checkOutTime.status).toBe(404);
     });
   });
 });
