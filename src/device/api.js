@@ -1,12 +1,23 @@
 const express = require("express");
 const router = express.Router();
 const DeviceDAO = require("../device/dao");
+const moment = require("moment");
+
+const format = "hh:mm:ss";
+const time = moment(moment(), format),
+  checkOutstartTime = moment("09:00:00", format),
+  checkOutEndTime = moment("17:00:00", format);
 
 router.get("/", async (req, res) => {
   const devices = await DeviceDAO.getAllDevices();
   if (devices) return res.status(200).send(devices);
   return res.status(404).send("No devices found");
 });
+
+/**
+ * saving device details
+ * @params device, os, manufacturer,
+ */
 
 router.post("/", async (req, res) => {
   try {
@@ -20,19 +31,35 @@ router.post("/", async (req, res) => {
   }
 });
 
+/**
+ * delete device
+ * @params deviceId
+ * @author Sitesh Ranjan <siteshr@chimeratechnologies>
+ */
+
 router.delete("/:deviceId", async (req, res) => {
   const response = await DeviceDAO.deleteDevice(req.params.deviceId);
   if (response.deletedCount) return res.status(200).send(response);
   return res.status(404).send("device with the given ID in not found");
 });
 
+/**
+ * checkout device with unique name
+ */
+
 router.put("/:deviceId", async (req, res) => {
   try {
     const isExist = await DeviceDAO.existingCheckOutUser(
       req.body.lastCheckOutBy
     );
+
     if (isExist)
       return res.status(404).send("device already checkout by this user.");
+
+    if (!time.isBetween(checkOutstartTime, checkOutEndTime))
+      return res
+        .status(404)
+        .send("check out can performed between 9:00 AM to 17:00 AM.");
 
     const response = await DeviceDAO.checkOutDevice(
       req.params.deviceId,
@@ -40,7 +67,7 @@ router.put("/:deviceId", async (req, res) => {
     );
     if (response) return res.status(200).send(response);
   } catch (err) {
-    throw new Error(" something went wrong");
+    throw new Error("something went wrong");
   }
 });
 
