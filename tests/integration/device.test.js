@@ -94,27 +94,38 @@ describe("Testing Device", () => {
       const checkOutResponse = await request(server)
         .put(`/api/devices/${response.body._id}`)
         .send(checkOutData);
-      expect(checkOutResponse.status).toBe(200);
+
+      expect(checkOutResponse.status).toBe(201);
+      expect(checkOutResponse.body).toMatchObject({
+        message: "CheckOut done succesfully",
+      });
 
       const checkOutDataWithSameName = {
         lastCheckOutBy: "sam@123",
         startTime: "09:00:00",
         endTime: "17:00:00",
       };
+
       const checkOutUser = await request(server)
         .put(`/api/devices/${response.body._id}`)
         .send(checkOutDataWithSameName);
-      expect(checkOutUser.status).toBe(404);
+      expect(checkOutUser.status).toBe(200);
+      expect(checkOutUser.body).toMatchObject({
+        message: "Device already checkout by this user.",
+      });
 
-      const checkOutDataValidationData = {
-        lastCheckOutBy: "sam@123",
+      const checkOutDateValidation = {
+        lastCheckOutBy: "sam@1234",
         startTime: "18:00:00",
         endTime: "19:00:00",
       };
       const checkOutTime = await request(server)
         .put(`/api/devices/${response.body._id}`)
-        .send(checkOutDataValidationData);
-      expect(checkOutTime.status).toBe(404);
+        .send(checkOutDateValidation);
+      expect(checkOutTime.status).toBe(200);
+      expect(checkOutTime.body).toMatchObject({
+        message: "check out can performed between 9:00 AM to 17:00 AM",
+      });
     });
   });
 });
