@@ -1,15 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const DeviceDAO = require("../device/dao");
-const moment = require("moment");
-
-function validateTime(startTime, endTime) {
-  const format = "hh:mm:ss";
-  const time = moment(moment(), format),
-    checkOutstartTime = moment(startTime, format),
-    checkOutEndTime = moment(endTime, format);
-  if (!time.isBetween(checkOutstartTime, checkOutEndTime)) return true;
-}
 
 router.get("/", async (req, res) => {
   const devices = await DeviceDAO.getAllDevices();
@@ -28,7 +19,7 @@ router.post("/", async (req, res) => {
     if (devices.length >= 10) {
       return res
         .status(200)
-        .send({ message: "device not allowed more then 10" });
+        .send({ error: true, message: "device not allowed more then 10" });
     } else {
       const devices = await DeviceDAO.createDevice(req);
       if (devices)
@@ -51,43 +42,6 @@ router.delete("/:deviceId", async (req, res) => {
   const response = await DeviceDAO.deleteDevice(req.params.deviceId);
   if (response.deletedCount) return res.status(200).send(response);
   return res.status(200).send("device with the given ID in not found");
-});
-
-/**
- * checkout device with unique name
- * checking validation
- */
-
-router.put("/:deviceId", async (req, res) => {
-  try {
-    const isExist = await DeviceDAO.existingCheckOutUser(
-      req.body.lastCheckOutBy
-    );
-
-    if (isExist)
-      return res
-        .status(200)
-        .send({ message: "Device already checkout by this user." });
-
-    const startTime = req.body.startTime ? req.body.startTime : "09:00:00";
-    const endTime = req.body.endTime ? req.body.endTime : "17:00:00";
-
-    if (validateTime(startTime, endTime))
-      return res.status(200).send({
-        message: "check out can performed between 9:00 AM to 17:00 AM",
-      });
-
-    const response = await DeviceDAO.checkOutDevice(
-      req.params.deviceId,
-      req.body.lastCheckOutBy
-    );
-    if (response)
-      return res
-        .status(201)
-        .send({ message: "CheckOut done succesfully", response: response });
-  } catch (err) {
-    throw new Error("something went wrong");
-  }
 });
 
 module.exports = router;

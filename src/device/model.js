@@ -7,7 +7,7 @@ const deviceSchema = new Schema({
   manufacturer: { type: String, required: true },
   lastCheckedOutDate: { type: Date, default: null },
   lastCheckedOutBy: { type: String, default: null },
-  isCheckedOut: { type: Boolean, default: false },
+  isCheckedOut: { type: Number, default: 0 },
   feedback: { type: String, default: null },
 });
 

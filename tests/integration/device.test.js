@@ -16,7 +16,7 @@ describe("Testing Device", () => {
     server.close();
   });
 
-  describe("fetch", () => {
+  describe("GET /", () => {
     it("should fetch devices from collection", async () => {
       const results = await request(server).get("/api/devices");
       expect(results.status).toBe(200);
@@ -24,7 +24,7 @@ describe("Testing Device", () => {
     });
   });
 
-  describe("insert / ", () => {
+  describe("POST / ", () => {
     it("should insert a device into collection", async () => {
       const payload = {
         device: "Sam",
@@ -33,7 +33,7 @@ describe("Testing Device", () => {
       };
       const response = await request(server).post("/api/devices").send(payload);
       expect(response.status).toBe(201);
-      expect(response.body).toMatchObject({ device: "Sam" });
+      expect(response.body.data).toMatchObject({ device: "Sam" });
     });
   });
 
@@ -46,15 +46,15 @@ describe("Testing Device", () => {
       };
       const res = await request(server).post("/api/devices").send(payload);
       expect(res.status).toBe(201);
-      expect(res.body).toMatchObject({ device: "Motorola" });
+      expect(res.body.data).toMatchObject({ device: "Motorola" });
       const result = await request(server)
-        .delete("/api/devices/" + res.body._id)
+        .delete("/api/devices/" + res.body.data._id)
         .send(payload);
       expect(result.status).toBe(200);
     });
   });
 
-  describe("insert feedback / ", () => {
+  describe("POST / ", () => {
     it("should insert a feedback into collection", async () => {
       const payload = {
         device: "Sam2",
@@ -63,19 +63,40 @@ describe("Testing Device", () => {
       };
       const response = await request(server).post("/api/devices").send(payload);
       expect(response.status).toBe(201);
-      expect(response.body).toMatchObject({ device: "Sam2" });
+      expect(response.body.data).toMatchObject({ device: "Sam2" });
 
       const feedback = {
         feedback: "feedback 1",
       };
       const feedbackResponse = await request(server)
-        .put(`/api/feedback/${response.body._id}`)
+        .put(`/api/feedback/${response.body.data._id}`)
         .send(feedback);
       expect(feedbackResponse.status).toBe(201);
     });
   });
 
-  describe("checkout device  / ", () => {
+  describe("PATCH / ", () => {
+    it("should check in device", async () => {
+      const payload = {
+        device: "Apple New",
+        os: "Catalina New",
+        manufacturer: "India New",
+      };
+      const response = await request(server).post("/api/devices").send(payload);
+      expect(response.status).toBe(201);
+      expect(response.body.data).toMatchObject({ device: "Apple New" });
+
+      const checkInReponse = await request(server).patch(
+        `/api/check-in-out/${response.body.data._id}`
+      );
+      expect(checkInReponse.status).toBe(200);
+      expect(checkInReponse.body).toMatchObject({
+        message: "check-in done successfully.",
+      });
+    });
+  });
+
+  describe("UPDATE  / ", () => {
     it("should checkout device", async () => {
       const payload = {
         device: "Apple",
@@ -84,20 +105,20 @@ describe("Testing Device", () => {
       };
       const response = await request(server).post("/api/devices").send(payload);
       expect(response.status).toBe(201);
-      expect(response.body).toMatchObject({ device: "Apple" });
+      expect(response.body.data).toMatchObject({ device: "Apple" });
 
       const checkOutData = {
         lastCheckOutBy: "sam@123",
         startTime: "09:00:00",
-        endTime: "17:00:00",
+        endTime: "23:00:00",
       };
       const checkOutResponse = await request(server)
-        .put(`/api/devices/${response.body._id}`)
+        .put(`/api/check-in-out/${response.body.data._id}`)
         .send(checkOutData);
 
       expect(checkOutResponse.status).toBe(201);
       expect(checkOutResponse.body).toMatchObject({
-        message: "CheckOut done succesfully",
+        message: "check-out done succesfully",
       });
 
       const checkOutDataWithSameName = {
@@ -107,7 +128,7 @@ describe("Testing Device", () => {
       };
 
       const checkOutUser = await request(server)
-        .put(`/api/devices/${response.body._id}`)
+        .put(`/api/check-in-out/${response.body.data._id}`)
         .send(checkOutDataWithSameName);
       expect(checkOutUser.status).toBe(200);
       expect(checkOutUser.body).toMatchObject({
@@ -120,7 +141,7 @@ describe("Testing Device", () => {
         endTime: "19:00:00",
       };
       const checkOutTime = await request(server)
-        .put(`/api/devices/${response.body._id}`)
+        .put(`/api/check-in-out/${response.body.data._id}`)
         .send(checkOutDateValidation);
       expect(checkOutTime.status).toBe(200);
       expect(checkOutTime.body).toMatchObject({

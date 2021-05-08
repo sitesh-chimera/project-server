@@ -9,9 +9,7 @@ router.put("/:deviceId", async (req, res) => {
       req.body.feedback
     );
     if (feedback) return res.status(201).send(feedback);
-    return res
-      .status(404)
-      .send("something went wrong please try again", feedback);
+    return res.status(200).send("something went wrong please try again");
   } catch (err) {
     console.log(err);
   }
