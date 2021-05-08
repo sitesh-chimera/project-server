@@ -24,11 +24,18 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const devices = await DeviceDAO.createDevice(req);
-    if (devices) return res.status(201).send(devices);
-    return res
-      .status(200)
-      .send("something went wrong please try again", devices);
+    const devices = await DeviceDAO.getAllDevices();
+    if (devices.length >= 10) {
+      return res
+        .status(200)
+        .send({ message: "device not allowed more then 10" });
+    } else {
+      const devices = await DeviceDAO.createDevice(req);
+      if (devices)
+        return res
+          .status(201)
+          .send({ message: "Device inserted successfully", data: devices });
+    }
   } catch (err) {
     console.log(err);
   }
