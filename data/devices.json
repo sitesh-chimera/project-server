@@ -1,0 +1,41 @@
+[{
+  "_id": {
+    "$oid": "6098dc9b919cda372cb2b360"
+  },
+  "lastCheckedOutDate": {
+    "$date": "2021-05-10T07:11:23.040Z"
+  },
+  "lastCheckedOutBy": "sam@123",
+  "isCheckedOut": 2,
+  "feedback": null,
+  "device": "Apple",
+  "os": "Catalina",
+  "manufacturer": "India",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "6098e4ef7b2881071885dd78"
+  },
+  "lastCheckedOutDate": {
+    "$date": "2021-05-10T07:47:45.861Z"
+  },
+  "lastCheckedOutBy": "sitesh ranjan",
+  "isCheckedOut": 2,
+  "feedback": null,
+  "device": "test device",
+  "os": "test os",
+  "manufacturer": "India",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "6098e7d97b2881071885dd79"
+  },
+  "lastCheckedOutDate": null,
+  "lastCheckedOutBy": null,
+  "isCheckedOut": 0,
+  "feedback": null,
+  "device": "samsung device",
+  "os": "Android",
+  "manufacturer": "India",
+  "__v": 0
+}]
