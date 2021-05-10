@@ -14,7 +14,7 @@
 
 #### Run in Local
 
-- start the server `node index.js`
+- start the server `npm start`
 - run Integration test `npm run test`
 
 ### Technology used
